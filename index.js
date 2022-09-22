@@ -11,48 +11,49 @@ const gravity = .35
 
 //call class player
 class Player {
-    constructor() {
+  constructor() {
     this.position = {
-    x: 30,
-    y: 30
-    }
+      x: 30,
+      y: 30,
+    };
     this.velocity = {
-
-        x:0,
-        y:0
-    }
-    this.width = 30
-    this. height = 45
+      x: 0,
+      y: 0,
+    };
+    this.width = 30;
+    this.height = 45;
     this.punch = {
-        position: this.position,
-        width: 50,
-        height: 15
-    }
-    }
-        
+      position: this.position,
+      width: 50,
+      height: 15,
+    };
+  }
 
-
-// call the image
-draw() {  
-    c.fillStyle = 'red'
-    c.fillRect(this.position.x, this.position.y, this.width, this.height)
+  // call the image
+  draw() {
+    c.fillStyle = "red";
+    c.fillRect(this.position.x, this.position.y, this.width, this.height);
 
     //draw the punch
-c.fillStyle = 'blue'
-    c.fillRect(this.punch.position.x, this.punch.position.y, this.punch.width, this.punch.height)
+    c.fillStyle = "blue";
+    c.fillRect(
+      this.punch.position.x,
+      this.punch.position.y,
+      this.punch.width,
+      this.punch.height
+    );
+  }
+  //call update function to update character
+  update() {
+    this.draw();
 
-}
-//call update function to update character
-    update() {
-        this.draw()
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
 
-        this.position.x += this.velocity.x
-        this.position.y += this.velocity.y
-
-        if(this.position.y + this.height + this.velocity.y <= canvas.height)
-        this.velocity.y += gravity
-        else this.velocity.y = 0
-    }
+    if (this.position.y + this.height + this.velocity.y <= canvas.height)
+      this.velocity.y += gravity;
+    else this.velocity.y = 0;
+  }
 }
 
 class Alien {
@@ -79,7 +80,7 @@ class Alien {
 
          // call the image
 draw() {  
-   // c.fillStyle = 'red'
+   //c.fillStyle = 'red'
     //c.fillRect(this.position.x, this.position.y, this.height, this.width)
     c.drawImage(
         this.image,
@@ -106,14 +107,15 @@ draw() {
 
 //create platforms
 class Platform {
-constructor(){
+constructor() {
 
     this.position = {
-        x:0,
-        y:500
+        x: 40,
+        y: 300
     }
-    this.width = 300
-    this.height = 20
+    this.width = 200
+    this.height = 80
+
 }
 
 draw(){
@@ -121,7 +123,11 @@ draw(){
     c.fillRect(this.position.x,
         this.position.y, this.width, this.height)
 }
-}
+update(){
+    this.draw()
+
+
+}}
 
 
 class Projectile {
@@ -159,15 +165,15 @@ class Grid {
         
         this.aliens = []
         
-        const columns = Math.floor(Math.random()+ 1)
-        const rows = Math.floor(Math.random()+ 1)
+        const columns = Math.floor(Math.random()+ 2)
+        const rows = Math.floor(Math.random()+ 2)
         this.width = columns * 5
         for (let x = 50; x > columns; x--) {
-            for (let y = 0; y > rows; y--) {
+            for (let y = 5; y > rows; y--) {
             this.aliens.push(new Alien({
                 position: {
-                    x: x * 80,
-                    y: y * 100
+                    x: 100 * x,
+                    y: 100 * y
                 }
             } 
             )
@@ -183,7 +189,7 @@ console.log(this.aliens)
 
         if (this.position.y + this.width >= canvas.width || this.position.y <= 0) {
             this.velocity.y = this.velocity.y
-            this.velocity.x = -.1
+            this.velocity.x = -.4 + .01
         }
     }
 }
@@ -192,7 +198,7 @@ console.log(this.aliens)
 
 const player = new Player()
 const projectiles = []
-const platform = new Platform
+const platform = new Platform 
 const grids = [new Grid()]
 
 const keys = {
@@ -204,50 +210,92 @@ const keys = {
         pressed: false
         }
 }
+/*
+ function init() {
+platformImage = src="img/platform.png"
+player = new Player ()
+platforms = [
+    new Platform({
+        x: 500,
+        y: 70,
+        image: platformImage
+    }),
+    new Platform({ x: platformImage.width - 3, y: 470, image: platformImage }),
+    new Platform({
+        x: platformImage.width * 2 + 100,
+        y: 70,
+        image: platformImage
+    })
+
+]
+}*/
 //call animate function to constantly call
 function animate() {
-    requestAnimationFrame(animate)
-    c.clearRect(0, 0, canvas.width, canvas.height)
-    player.update()
-    platform.draw()
-//projectiles shoot
-    projectiles.forEach(projectile => {projectile.update()})
-    if (keys.right.pressed){player.velocity.x = 5}
-    else if (keys.left.pressed){player.velocity.x = -5}
-    else player.velocity.x = 0
-//projectiles kill
-     /* projectiles.forEach((projectile, j) => {
-        if (projectile.position.x - projectile.radius <= alien.position.x - alien.width ){
-            setTimeout(() => {
+  requestAnimationFrame(animate);
+  c.clearRect(0, 0, canvas.width, canvas.height);
+  player.update();
+  platform.draw();
+  //projectiles shoot
 
-                invaders.splice(i, 1)
-                projectiles.splice(j, 1)
-            }, 0)    } }) */ 
-//platform Animate
-if(keys.right.pressed && player.position.x < 400) { player.velocity.x = 5
-} else if (keys.left.pressed && player.position.x > 50){
-    player.velocity.x = -5
-} else {player.velocity.x = 0
+  projectiles.forEach((projectile) => {
+    projectile.update();
+  });
 
-    if (keys.right.pressed){
-        platform.position.x -= 5}
-     else if (keys.left.pressed){
-        platform.position.x += 5}
+  if (keys.right.pressed) {
+    player.velocity.x = 5;
+  } else if (keys.left.pressed) {
+    player.velocity.x = -5;
+  } else player.velocity.x = 0;
+
+  //projectiles kill
+  projectiles.forEach((projectile, i) => {    
+
+    if (
+      projectile.position.x - projectile.radius <=
+      alien.position.x + alien.width
+    ) {
+        grid.aliens.splice(i, 1);
+        projectiles.splice(i, 1);
+
+    //   setTimeout(() => {
+    //     grid.aliens.splice(i, 1);
+    //     projectiles.splice(i, 1);
+    //   }, 0);
     }
 
-if( player.position.y + player.height <= platform.position.y
-    && player.position.y + player.height + player.velocity.y 
-    >= platform.position.y && player.position.x + player.width 
-     >= platform.position.x && player.position.x <= platform.position.x
-      + platform.width)
-      {player.velocity.y = 0}
-//Grids of Aliens moving
-    /* grids.forEach((grid) => {
-        grid.update()
-        grid.aliens.forEach((alien, i) => {
-         alien.update({velocity: grid.velocity})
-     }) 
- }) */           
+    
+  });
+  //platform Animate
+  if (keys.right.pressed && player.position.x < 400) {
+    player.velocity.x = 5;
+  } else if (keys.left.pressed && player.position.x > 50) {
+    player.velocity.x = -5;
+  } else {
+    player.velocity.x = 0;
+
+    if (keys.right.pressed) {
+      platform.position.x -= 5;
+    } else if (keys.left.pressed) {
+      platform.position.x += 5;
+    }
+  }
+
+  if (
+    player.position.y + player.height <= platform.position.y &&
+    player.position.y + player.height + player.velocity.y >=
+      platform.position.y &&
+    player.position.x + player.width >= platform.position.x &&
+    player.position.x <= platform.position.x + platform.width
+  ) {
+    player.velocity.y = 0;
+  }
+  //Grids of Aliens moving
+  grids.forEach((grid) => {
+    grid.update();
+    grid.aliens.forEach((alien, i) => {
+      alien.update({ velocity: grid.velocity });
+    });
+  });
 }
 
 animate()
