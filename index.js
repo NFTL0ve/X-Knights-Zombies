@@ -31,6 +31,7 @@ class Player {
 
   // call the image
   draw() {
+    
     c.fillStyle = "red";
     c.fillRect(this.position.x, this.position.y, this.width, this.height);
 
@@ -57,7 +58,7 @@ class Player {
 }
 
 class Alien {
-    constructor({ position }) {
+    constructor() {
     this.velocity = {
         x:0,
         y:0
@@ -74,20 +75,15 @@ class Alien {
         this.width = 2048 * scale
         this.height = 2048 * scale
         this.position = {
-            x: position.x,
-            y: position.y
+            x: 200,
+            y: 400
          }} }
 
          // call the image
 draw() {  
    //c.fillStyle = 'red'
     //c.fillRect(this.position.x, this.position.y, this.height, this.width)
-    c.drawImage(
-        this.image,
-        this.position.x,
-        this.position.y,
-        this.width,
-        this.height)
+    c.drawImage
 
 
 }
@@ -138,6 +134,26 @@ class Platformgreen {
   
     draw() {
       c.fillStyle = "green";
+      c.fillRect(this.position.x, this.position.y, this.width, this.height);
+    }
+    update() {
+      this.draw();
+    }
+  }
+
+  class Platformorange {
+    constructor(horizontalPosition, verticalPosition) {
+      this.position = {
+        x: 7000,
+        y: 400
+      };
+      this.width = 100;
+      this.height = 100
+      
+    }
+  
+    draw() {
+      c.fillStyle = "orange";
       c.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
     update() {
@@ -244,6 +260,12 @@ this.radius = 7}
 }
 }
 
+
+
+
+
+
+
 /* class Grid {
     constructor() {
 
@@ -320,6 +342,8 @@ const platformpurple3 = new Platformpurple(2500, 400);
 const platformpink = new Platformpink(2900, 400);
 const platformsilver = new Platformsilver(5800, 400);
 const roof = new Roof
+const platformorange = new Platformorange
+
 // const grids = [new Grid()]
 // const myGrid = new Grid();
 // myGrid.aliens  ---> here you prob. have an array of aliens
@@ -352,6 +376,8 @@ platforms = [
 
 ]
 } /*/
+
+
 //call animate function to constantly call
 function animate() {
   requestAnimationFrame(animate);
@@ -386,6 +412,7 @@ function animate() {
   platformpink.draw();
   platformsilver.draw();
   roof.draw();
+  platformorange.draw();
   //projectiles shoot
 
   projectiles.forEach((projectile) => {
@@ -589,6 +616,9 @@ function animate() {
   ) {
     player.velocity.y = -1;
     gravity = .35
+    console.log('Winner')
+    document.write("Y.O.U. W.I.N")
+    document.write("play again")
   }
 
 //---------------------------
@@ -678,7 +708,7 @@ function animate() {
     player.position.x + player.width >= platformgreen.position.x &&
     player.position.x <= platformgreen.position.x + platformgreen.width
   ) {
-    player.velocity.y = +2;
+    player.velocity.y = +30;
     player.velocity.x = -10;
   }
   if (
@@ -688,7 +718,7 @@ function animate() {
     player.position.x + player.width >= platformgreen1.position.x &&
     player.position.x <= platformgreen1.position.x + platformgreen1.width
   ) {
-    player.velocity.y = +2;
+    player.velocity.y = +30;
     player.velocity.x = -10;
 
   }
@@ -699,7 +729,7 @@ function animate() {
     player.position.x + player.width >= platformgreen2.position.x &&
     player.position.x <= platformgreen2.position.x + platformgreen2.width
   ) {
-    player.velocity.y = +2;
+    player.velocity.y = +30;
     player.velocity.x = -8;
 
   }
@@ -710,7 +740,7 @@ function animate() {
     player.position.x + player.width >= platformgreen3.position.x &&
     player.position.x <= platformgreen3.position.x + platformgreen3.width
   ) {
-    player.velocity.y = +2;
+    player.velocity.y = +10;
     player.velocity.x = -8;
   }
   if (
@@ -720,7 +750,7 @@ function animate() {
     player.position.x + player.width >= platformgreen4.position.x &&
     player.position.x <= platformgreen4.position.x + platformgreen4.width
   ) {
-    player.velocity.y = +2;
+    player.velocity.y = +10;
     player.velocity.x = -8;
   }
   if (
@@ -730,7 +760,7 @@ function animate() {
     player.position.x + player.width >= platformgreen5.position.x &&
     player.position.x <= platformgreen5.position.x + platformgreen5.width
   ) {
-    player.velocity.y = +2;
+    player.velocity.y = +10;
     player.velocity.x = -8;
   }
   if (
@@ -740,7 +770,7 @@ function animate() {
     player.position.x + player.width >= platformgreen6.position.x &&
     player.position.x <= platformgreen6.position.x + platformgreen6.width
   ) {
-    player.velocity.y = +2;
+    player.velocity.y = +10;
     player.velocity.x = -8;
 
   }
@@ -751,7 +781,7 @@ function animate() {
     player.position.x + player.width >= platformgreen7.position.x &&
     player.position.x <= platformgreen7.position.x + platformgreen7.width
   ) {
-    player.velocity.y = +2;
+    player.velocity.y = +10;
     player.velocity.x = -8;
   }
   if (
@@ -761,7 +791,7 @@ function animate() {
     player.position.x + player.width >= platformgreen8.position.x &&
     player.position.x <= platformgreen8.position.x + platformgreen8.width
   ) {
-    player.velocity.y = +2;
+    player.velocity.y = +10;
     player.velocity.x = -8;
   }
   if (
@@ -771,7 +801,7 @@ function animate() {
     player.position.x + player.width >= platformgreen9.position.x &&
     player.position.x <= platformgreen9.position.x + platformgreen9.width
   ) {
-    player.velocity.y = +2;
+    player.velocity.y = +10;
     player.velocity.x = -8;
   }
   if (
@@ -781,7 +811,7 @@ function animate() {
     player.position.x + player.width >= platformgreen10.position.x &&
     player.position.x <= platformgreen10.position.x + platformgreen10.width
   ) {
-    player.velocity.y = +2;
+    player.velocity.y = +10;
     player.velocity.x = -8;
   }
 
@@ -976,9 +1006,26 @@ function animate() {
   ) {
     player.velocity.y = -4;
     gravity = gravity * .2
+    
   }
 
 
+  if (player.position.y > 700){
+    console.log('you lose');
+   document.write("Try Again");
+   
+  }
+
+
+
+
+  //-----------------------------
+
+
+
+
+
+  
  /* //Grids of Aliens moving
   grids.forEach((grid) => {
     grid.update();
