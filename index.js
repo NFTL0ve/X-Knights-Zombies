@@ -55,58 +55,53 @@ c.fillStyle = 'blue'
     }
 }
 
-class Enemy {
-    constructor() {
-    this.position = {
-    x: 0,
-    y: 0
-    }
+class Alien {
+    constructor({ position }) {
     this.velocity = {
         x:0,
         y:0
     }
-    this.rotation = 0
+  
     const image = new Image()
-    image.src = './img/xrider.jpg'
+    image.src = './img/alien.png'
     image.onload = () => {
 
-     const scale = 1
+     const scale = .08
       
         this.image = image
         
-        this.width = image.width
-        this.height = image.height
+        this.width = 2048 * scale
+        this.height = 2048 * scale
         this.position = {
-            x: canvas.width / 2 - this.width / 2,
-            y: canvas.height /2
+            x: position.x,
+            y: position.y
          }} }
 
          // call the image
 draw() {  
-    c.fillStyle = 'red'
-    c.fillRect(this.position.x, this.position.y, this.width, this.height)
+   // c.fillStyle = 'red'
+    //c.fillRect(this.position.x, this.position.y, this.height, this.width)
+    c.drawImage(
+        this.image,
+        this.position.x,
+        this.position.y,
+        this.width,
+        this.height)
 
-    c.save()
-    c.translate(
-        player.position.x + player.width / 2,
-        player.position.y + player.height / 2
-    )
-    
 
 }
 
 
 //call update function to update character
-    update() {
+    update({velocity}) {
+       if (this.image){
+
         this.draw()
 
-        this.position.x += this.velocity.x
-        this.position.y += this.velocity.y
-
-        if(this.position.y + this.height + this.velocity.y <= canvas.height)
-        this.velocity.y += gravity
-        else this.velocity.y = 0
+        this.position.x += velocity.x
+        this.position.y += velocity.y
     }
+}
 }
 
 //create platforms
@@ -123,7 +118,8 @@ constructor(){
 
 draw(){
     c.fillStyle = 'red'
-    c.fillRect(this.position.x, this.position.y, this.width, this.height)
+    c.fillRect(this.position.x,
+        this.position.y, this.width, this.height)
 }
 }
 
@@ -149,10 +145,56 @@ this.radius = 7}
 }
 }
 
+class Grid {
+    constructor() {
+
+        this.position = {
+            x: 0,
+            y: 0
+        }
+        this.velocity = {
+            x:0 ,
+            y:0
+        }
+        
+        this.aliens = []
+        
+        const columns = Math.floor(Math.random()+ 1)
+        const rows = Math.floor(Math.random()+ 1)
+        this.width = columns * 5
+        for (let x = 50; x > columns; x--) {
+            for (let y = 0; y > rows; y--) {
+            this.aliens.push(new Alien({
+                position: {
+                    x: x * 80,
+                    y: y * 100
+                }
+            } 
+            )
+            )
+        }
+    }
+console.log(this.aliens)
+    }
+    update() {
+        this.position.x += this.velocity.x
+        this.position.y += this.velocity.y
+        this.velocity.x = 0
+
+        if (this.position.y + this.width >= canvas.width || this.position.y <= 0) {
+            this.velocity.y = this.velocity.y
+            this.velocity.x = -.1
+        }
+    }
+}
+
+
 
 const player = new Player()
 const projectiles = []
 const platform = new Platform
+const grids = [new Grid()]
+
 const keys = {
 
     right: {
@@ -162,36 +204,54 @@ const keys = {
         pressed: false
         }
 }
-
-
 //call animate function to constantly call
-
 function animate() {
-
     requestAnimationFrame(animate)
     c.clearRect(0, 0, canvas.width, canvas.height)
-    platform.draw()
     player.update()
+    platform.draw()
+//projectiles shoot
     projectiles.forEach(projectile => {projectile.update()})
     if (keys.right.pressed){player.velocity.x = 5}
     else if (keys.left.pressed){player.velocity.x = -5}
     else player.velocity.x = 0
+//projectiles kill
+     /* projectiles.forEach((projectile, j) => {
+        if (projectile.position.x - projectile.radius <= alien.position.x - alien.width ){
+            setTimeout(() => {
 
+                invaders.splice(i, 1)
+                projectiles.splice(j, 1)
+            }, 0)    } }) */ 
+//platform Animate
+if(keys.right.pressed && player.position.x < 400) { player.velocity.x = 5
+} else if (keys.left.pressed && player.position.x > 50){
+    player.velocity.x = -5
+} else {player.velocity.x = 0
 
-        if( player.position.y + player.height <= platform.position.y
-             && player.position.y + player.height + player.velocity.y 
-             >= platform.position.y && player.position.x + player.width 
-              >= platform.position.x && player.position.x <= platform.position.x
-               + platform.width)
-               
-               {player.velocity.y = 0}
-        }
+    if (keys.right.pressed){
+        platform.position.x -= 5}
+     else if (keys.left.pressed){
+        platform.position.x += 5}
+    }
 
+if( player.position.y + player.height <= platform.position.y
+    && player.position.y + player.height + player.velocity.y 
+    >= platform.position.y && player.position.x + player.width 
+     >= platform.position.x && player.position.x <= platform.position.x
+      + platform.width)
+      {player.velocity.y = 0}
+//Grids of Aliens moving
+    /* grids.forEach((grid) => {
+        grid.update()
+        grid.aliens.forEach((alien, i) => {
+         alien.update({velocity: grid.velocity})
+     }) 
+ }) */           
+}
 
 animate()
-
-//Select keys when they are pressed
-
+//Select keys when they are pressed§
 addEventListener('keydown', ({ keyCode }) => {
 
     switch (keyCode) {
@@ -236,6 +296,7 @@ addEventListener('keydown', ({ keyCode }) => {
 })
 
 //When keys are not pressed
+
 
 addEventListener('keyup', ({ keyCode }) => {
     switch (keyCode) {
